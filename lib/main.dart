@@ -1,13 +1,11 @@
 import 'package:crud_application/home_page.dart';
+import 'package:crud_application/product_list.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
+
 
 
 void main() {
-  databaseFactory = databaseFactoryFfiWeb;
-  sqfliteFfiInit();
-  WidgetsFlutterBinding.ensureInitialized();
+
 
   runApp(const myapp());
 }
@@ -19,7 +17,7 @@ class myapp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:HomePage(),
+      home:ProductList(),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:crud_application/db_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,11 +10,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Map<String,dynamic>>_alldata = [];
+  List<Map<String, dynamic>> _alldata = [];
 
   bool _isLoading = true;
 
-  
   void _refreshData() async {
     final data = await DBHelper.getAllData();
     setState(() {
@@ -25,19 +25,17 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _refreshData(); // Load data when the widget initializes
+    _refreshData(); //  initializes
   }
 
   // Adds new data to the database.
   Future<void> _addData() async {
-    
     if (_titleController.text.isNotEmpty || _descController.text.isNotEmpty) {
       await DBHelper.createData(_titleController.text, _descController.text);
-      _refreshData(); // Refresh UI after adding
+      _refreshData(); //
       _titleController.clear();
       _descController.clear();
     } else {
-    
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.orange,
@@ -48,14 +46,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _updateData(int id) async {
-  
     if (_titleController.text.isNotEmpty || _descController.text.isNotEmpty) {
-      await DBHelper.updateData(id, _titleController.text, _descController.text);
-      _refreshData(); 
+      await DBHelper.updateData(
+        id,
+        _titleController.text,
+        _descController.text,
+      );
+      _refreshData();
       _titleController.clear();
       _descController.clear();
     } else {
-    
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.orange,
@@ -73,21 +73,20 @@ class _HomePageState extends State<HomePage> {
         content: Text('Data deleted successfully'),
       ),
     );
-    _refreshData(); 
+    _refreshData();
   }
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
 
-  
   void showBottomSheet(int? id) async {
-    
     _titleController.clear();
     _descController.clear();
 
     if (id != null) {
-      
-      final existingData = _alldata.firstWhere((element) => element['id'] == id);
+      final existingData = _alldata.firstWhere(
+        (element) => element['id'] == id,
+      );
       _titleController.text = existingData['title'];
       _descController.text = existingData['desc'];
     }
@@ -101,7 +100,7 @@ class _HomePageState extends State<HomePage> {
           top: 30,
           left: 20,
           right: 20,
-          
+
           bottom: MediaQuery.of(context).viewInsets.bottom + 20,
         ),
         child: Column(
@@ -120,24 +119,28 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
-                
                 onPressed: () async {
                   if (id == null) {
-                    await _addData(); 
+                    await _addData();
+                    _refreshData();// Refresh the list
                   } else {
-                    await _updateData(id); 
+                    await _updateData(id);
+                    _refreshData(); // Refresh the list
                   }
-                  
+
                   if (mounted) {
                     Navigator.of(context).pop();
                   }
-                  print("Operation completed successfully"); 
+                  print("Operation completed successfully");
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Text(
                     id == null ? 'Add Data' : 'Update Data',
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -153,47 +156,54 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('CRUD Application'),
+        title: const Text('CRUD Application',
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            )),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 8, 61, 118),
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(), 
-            )
+          ? const Center(child: CircularProgressIndicator())
           : _alldata.isEmpty
-              ? const Center(
-                  child: Text('No data available. Add some!'), 
-                )
-              : ListView.builder(
-                  itemCount: _alldata.length,
-                  itemBuilder: (context, index) => Card(
-                    margin: const EdgeInsets.all(10),
-                    child: ListTile(
-                      title: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                        child: Text(
-                          _alldata[index]['title'],
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      subtitle: Text(_alldata[index]['desc']),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            onPressed: () => showBottomSheet(_alldata[index]['id']),
-                            icon: const Icon(Icons.edit, color: Colors.blue),
-                          ),
-                          IconButton(
-                            onPressed: () => _deleteData(_alldata[index]['id']),
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                          ),
-                        ],
+          ? const Center(child: Text('No data available. Add some!'))
+          : ListView.builder(
+              itemCount: _alldata.length,
+              itemBuilder: (context, index) => Card(
+                margin: const EdgeInsets.all(10),
+                child: ListTile(
+                  title: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 10,
+                    ),
+                    child: Text(
+                      _alldata[index]['title'],
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
+                  subtitle: Text(_alldata[index]['desc']),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () => showBottomSheet(_alldata[index]['id']),
+                        icon: const Icon(Icons.edit, color: Colors.blue),
+                      ),
+                      IconButton(
+                        onPressed: () => _deleteData(_alldata[index]['id']),
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                      ),
+                    ],
+                  ),
                 ),
+              ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => showBottomSheet(null),
         child: const Icon(Icons.add),

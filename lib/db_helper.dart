@@ -1,5 +1,5 @@
 import 'package:sqflite/sqflite.dart' as sql;
-
+import 'package:path_provider/path_provider.dart';
 
 class DBHelper {
   static Future<void> createaTables(sql.Database database) async {
@@ -20,9 +20,16 @@ class DBHelper {
 
   static Future<int> createData(String title, String desc) async {
     final db = await DBHelper.db();
-    final data = {'title': title, 'desc': desc, 'createAt': DateTime.now().toString()};
-
-    final id = await db.insert('user', data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
+    final data = {
+      'title': title,
+      'desc': desc,
+      'createAt': DateTime.now().toString(),
+    };
+    final id = await db.insert(
+      'user',
+      data,
+      conflictAlgorithm: sql.ConflictAlgorithm.replace,
+    );
     return id;
   }
 
@@ -38,9 +45,18 @@ class DBHelper {
 
   static Future<int> updateData(int id, String title, String desc) async {
     final db = await DBHelper.db();
-    final data = {'title': title, 'desc': desc, 'createAt': DateTime.now().toString()};
+    final data = {
+      'title': title,
+      'desc': desc,
+      'createAt': DateTime.now().toString(),
+    };
 
-    final result = await db.update('user', data, where: 'id = ?', whereArgs: [id]);
+    final result = await db.update(
+      'user',
+      data,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
     return result;
   }
 
