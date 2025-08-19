@@ -1,23 +1,21 @@
-import 'package:crud_application/home_page.dart';
-import 'package:crud_application/product_list.dart';
+import 'package:crud_application/api_help/api_service.dart';
 import 'package:flutter/material.dart';
 
-
+import 'product.dart';
+import 'debouncer.dart';
 
 void main() {
-
-
-  runApp(const myapp());
+  runApp(MaterialApp(home: ProductListPage()));
 }
-class myapp extends StatelessWidget {
-  const myapp({super.key});
-  
 
+class ProductListPage extends StatefulWidget {
+  @override
+  _ProductListPageState createState() => _ProductListPageState();
+}
+
+class _ProductListPageState extends State<ProductListPage> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home:ProductList(),
-    );
+    return Scaffold();
   }
 }

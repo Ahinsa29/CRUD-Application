@@ -6,7 +6,7 @@ class CardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search Products'),
+        title: const Text('Your Items'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

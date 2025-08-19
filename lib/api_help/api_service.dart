@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:crud_application/product.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 
 class ApiService {
   static const String baseUrl = 'https://fakestoreapi.com/products';
@@ -14,8 +16,8 @@ class ApiService {
       throw Exception('Failed to load products');
     }
   }
-
-  static Future<Product> createProduct(String title, double price, String description, String image, String category) async {
+  
+   Future<Product> createProduct(String title, double price, String description, String image, String category) async {
     final response = await http.post(
       Uri.parse(baseUrl),
       body: json.encode({
@@ -33,9 +35,9 @@ class ApiService {
       throw Exception('Failed to create product');
     }
   }
-
   static Future<void> deleteProduct(int id) async {
     await http.delete(Uri.parse('baseUrl/id'));
   }
+
 }
 
