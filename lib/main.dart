@@ -1,21 +1,15 @@
-import 'package:crud_application/api_help/api_service.dart';
+import 'package:crud_application/components/splash_screen.dart';
 import 'package:flutter/material.dart';
-
-import 'product.dart';
-import 'debouncer.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'product_list.dart'; 
 
 void main() {
-  runApp(MaterialApp(home: ProductListPage()));
+  runApp(
+    MaterialApp(
+      home: SplashScreen(),
+      debugShowCheckedModeBanner: false,
+    ),
+  );
 }
 
-class ProductListPage extends StatefulWidget {
-  @override
-  _ProductListPageState createState() => _ProductListPageState();
-}
 
-class _ProductListPageState extends State<ProductListPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold();
-  }
-}
